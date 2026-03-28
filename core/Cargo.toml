@@ -3,6 +3,11 @@ name = "ogn-aprs-parser"
 version = "0.1.0"
 rust-version = { workspace = true }
 edition = { workspace = true }
+description = "Library to parse OGN APRS messages"
+authors = ["Shaun Ho <sefho98@gmail.com"]
+license = "MIT"
+repository = "https://github.com/Shaun-Ho/ogn-aprs-parser"
+readme = "README.md"
 
 
 [dependencies]
