@@ -11,9 +11,8 @@ dependencies = []
 [dependency-groups]
 
 [tool.maturin]
-module-name = "ogn_aprs_parser"
 manifest-path = "Cargo.toml"
-features = ["pyo3/extension-module"]
+features = ["pyo3/abi3-py310"]
 
 [tool.uv]
 cache-keys = [
