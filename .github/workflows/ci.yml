@@ -121,8 +121,16 @@ jobs:
 
     cargo-publish:
         name: Publish Rust Core
-        # Only run if the release tag matches the core crate format
-        if: startsWith(github.event.release.tag_name, 'release/ogn-aprs-parser@')
+        needs:
+            - cargo-build
+            - cargo-fmt
+            - cargo-clippy
+            - cargo-doc
+            - cargo-next-test
+            - typos-cli
+            - taplo-toml-fmt
+            - yamlfmt
+        if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'release/ogn-aprs-parser@')
         runs-on: ubuntu-latest
         environment:
             name: crates-io-release
