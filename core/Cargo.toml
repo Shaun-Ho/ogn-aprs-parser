@@ -1,11 +1,18 @@
 [package]
-name = "ogn_aprs_parser"
+name = "ogn-aprs-parser"
 version = "0.1.0"
 rust-version = { workspace = true }
 edition = { workspace = true }
 
 
 [dependencies]
+chrono = "0.4.44"
+nom = "8.0.0"
+strum = "0.28.0"
+strum_macros = "0.28.0"
+thiserror = "2.0.18"
 
 
 [dev-dependencies]
+approx = "0.5.1"
+rstest = "0.26.1"
