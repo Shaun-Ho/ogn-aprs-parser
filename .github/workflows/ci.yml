@@ -146,10 +146,9 @@ jobs:
               shell: bash
               run: |
                   REF_NAME="${{ github.ref }}"
-
                   TAG_VERSION=${REF_NAME##*@v}
 
-                  CARGO_VERSION=$(grep '^version =' Cargo.toml | head -n 1 | awk -F '"' '{print $2}')
+                  CARGO_VERSION=$(cargo metadata --format-version 1 --no-deps | jq -r '.packages[] | select(.name=="ogn-aprs-parser") | .version')
 
                   echo "Parsed Tag Version: $TAG_VERSION"
                   echo "Cargo.toml Version: $CARGO_VERSION"
