@@ -1,0 +1,21 @@
+[package]
+name = "ogn-aprs-parser-pyo3"
+version = "0.1.0"
+rust-version = { workspace = true }
+edition = { workspace = true }
+description = "Collection of Rust bindings to the ogn-aprs-parser crate"
+authors = ["Shaun Ho <sefho98@gmail.com"]
+license = "MIT"
+repository = "https://github.com/Shaun-Ho/ogn-aprs-parser"
+readme = "README.md"
+
+[lib]
+module-name = "ogn_aprs_parser"
+crate-type = ["cdylib"]
+
+
+[dependencies]
+pyo3 = "0.28.2"
+ogn-aprs-parser = { path = "../core" }
+
+[dev-dependencies]

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "ogn-aprs-parser-pyo3"
+requires-python = ">=3.10"
+version = "0.1.0"
+dependencies = []
+
+[dependency-groups]
+
+[tool.maturin]
+module-name = "ogn_aprs_parser"
+manifest-path = "Cargo.toml"
+features = ["pyo3/extension-module"]
+
+[tool.uv]
+cache-keys = [
+  { file = "Cargo.toml" },
+  { file = "../core/Cargo.toml" },
+  { file = "src/**/*.rs" },
+  { file = "../core/src/**/*.rs" },
+]
