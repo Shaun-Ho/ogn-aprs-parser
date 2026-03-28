@@ -5,11 +5,14 @@ name: CI
 on:
     pull_request:
     push:
+        branches:
+            - '**'
+    workflow_dispatch:
     release:
         types: [published]
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
     cancel-in-progress: true
 
 jobs:
@@ -120,7 +123,7 @@ jobs:
               run: yamlfmt .
 
     cargo-publish:
-        name: Publish Rust Core
+        name: Publish ogn-aprs-parser
         needs:
             - cargo-build
             - cargo-fmt
@@ -130,7 +133,7 @@ jobs:
             - typos-cli
             - taplo-toml-fmt
             - yamlfmt
-        if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'release/ogn-aprs-parser@')
+        if: github.event_name == 'release' && contains(github.event.release.tag_name, 'ogn-aprs-parser@')
         runs-on: ubuntu-latest
         environment:
             name: crates-io-release
@@ -142,25 +145,24 @@ jobs:
               uses: actions-rust-lang/setup-rust-toolchain@v1
 
             - name: Verify Tag and Version
+              shell: bash
               run: |
-                  # The tag looks like: release/ogn-aprs-parser@v1.0.0
+                  # Debugging: Print exactly what GitHub sees
+                  echo "Event Tag: ${{ github.event.release.tag_name }}"
+
                   TAG_NAME="${{ github.event.release.tag_name }}"
+                  # This regex extracts the version after the @v
+                  TAG_VERSION=$(echo "$TAG_NAME" | sed 's/.*@v//')
 
-                  # We split the string at '@v' and take the second part (1.0.0)
-                  TAG_VERSION=$(echo "$TAG_NAME" | awk -F'@v' '{print $2}')
+                  CARGO_VERSION=$(grep '^version =' Cargo.toml | head -n 1 | awk -F '"' '{print $2}')
 
-                  CARGO_VERSION=$(grep '^version =' Cargo.toml \
-                    | head -n 1 \
-                    | awk -F '"' '{print $2}')
+                  echo "Parsed Tag Version: $TAG_VERSION"
+                  echo "Cargo.toml Version: $CARGO_VERSION"
 
                   if [ "$CARGO_VERSION" != "$TAG_VERSION" ]; then
-                    ERR="Tag version ($TAG_VERSION) does not match "
-                    ERR+="Cargo.toml version ($CARGO_VERSION)"
-                    echo "::error::$ERR"
+                    echo "::error::Mismatch! Tag: $TAG_VERSION, Cargo: $CARGO_VERSION"
                     exit 1
                   fi
-
-                  echo "Version verified: $TAG_VERSION"
 
             - name: Publish core crate
               env:
