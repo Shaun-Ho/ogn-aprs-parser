@@ -121,10 +121,12 @@ jobs:
               run: yamlfmt .
 
     cargo-publish:
+        if: github.event_name == 'release'
         name: Publish ${{ matrix.package }}
         needs: [cargo-build, cargo-fmt, cargo-clippy, cargo-next-test]
         runs-on: ubuntu-latest
         strategy:
+            fail-fast: false
             matrix:
                 include:
                     - package: ogn-aprs-parser
@@ -135,9 +137,6 @@ jobs:
         environment:
             name: crates-io-release
         steps:
-            - name: Fetch Repository
-              uses: actions/checkout@v4
-              if: github.event_name == 'release' && startsWith(github.event.release.tag_name, matrix.tag_prefix)
 
             - name: Check valid tag prefix
               id: check
@@ -147,6 +146,9 @@ jobs:
                   else
                     echo "match=false" >> $GITHUB_OUTPUT
                   fi
+
+            - name: Fetch Repository
+              uses: actions/checkout@v4
 
             - name: Install stable toolchain
               uses: actions-rust-lang/setup-rust-toolchain@v1
