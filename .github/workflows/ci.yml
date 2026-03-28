@@ -145,12 +145,9 @@ jobs:
             - name: Verify Tag and Version
               shell: bash
               run: |
-                  # Debugging: Print exactly what GitHub sees
-                  echo "Event Tag: ${{ github.event.release.tag_name }}"
+                  REF_NAME="${{ github.ref }}"
 
-                  TAG_NAME="${{ github.event.release.tag_name }}"
-                  # This regex extracts the version after the @v
-                  TAG_VERSION=$(echo "$TAG_NAME" | sed 's/.*@v//')
+                  TAG_VERSION=${REF_NAME##*@v}
 
                   CARGO_VERSION=$(grep '^version =' Cargo.toml | head -n 1 | awk -F '"' '{print $2}')
 
@@ -158,7 +155,7 @@ jobs:
                   echo "Cargo.toml Version: $CARGO_VERSION"
 
                   if [ "$CARGO_VERSION" != "$TAG_VERSION" ]; then
-                    echo "::error::Mismatch! Tag: $TAG_VERSION, Cargo: $CARGO_VERSION"
+                    echo "Version missmatch. Tag: $TAG_VERSION, Cargo: $CARGO_VERSION"
                     exit 1
                   fi
 
