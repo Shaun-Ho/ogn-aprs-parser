@@ -121,44 +121,60 @@ jobs:
               run: yamlfmt .
 
     cargo-publish:
-        name: Publish ogn-aprs-parser
-        needs:
-            - cargo-build
-            - cargo-fmt
-            - cargo-clippy
-            - cargo-doc
-            - cargo-next-test
-            - typos-cli
-            - taplo-toml-fmt
-            - yamlfmt
-        if: github.event_name == 'release' && contains(github.event.release.tag_name, 'ogn-aprs-parser@')
+        name: Publish ${{ matrix.package }}
+        needs: [cargo-build, cargo-fmt, cargo-clippy, cargo-next-test]
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                include:
+                    - package: ogn-aprs-parser
+                      tag_prefix: ogn-aprs-parser@v
+                    - package: ogn-aprs-parser-pyo3
+                      tag_prefix: ogn-aprs-parser-pyo3@v
+
         environment:
             name: crates-io-release
         steps:
             - name: Fetch Repository
               uses: actions/checkout@v4
+              if: github.event_name == 'release' && startsWith(github.event.release.tag_name, matrix.tag_prefix)
+
+            - name: Check valid tag prefix
+              id: check
+              run: |
+                  if [[ "${{ github.event_name }}" == "release" && "${{ github.event.release.tag_name }}" == ${{ matrix.tag_prefix }}* ]]; then
+                    echo "match=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "match=false" >> $GITHUB_OUTPUT
+                  fi
 
             - name: Install stable toolchain
               uses: actions-rust-lang/setup-rust-toolchain@v1
+              if: steps.check.outputs.match == 'true'
 
             - name: Verify Tag and Version
               shell: bash
+              if: steps.check.outputs.match == 'true'
               run: |
-                  REF_NAME="${{ github.ref }}"
-                  TAG_VERSION=${REF_NAME##*@v}
+                  TAG_NAME="${{ github.event.release.tag_name }}"
+                  TAG_VERSION=${TAG_NAME#"${{ matrix.tag_prefix }}"}
 
-                  CARGO_VERSION=$(cargo metadata --format-version 1 --no-deps | jq -r '.packages[] | select(.name=="ogn-aprs-parser") | .version')
+                  CARGO_VERSION=$(cargo metadata --format-version 1 --no-deps | \
+                    jq -r --arg PKG "${{ matrix.package }}" '.packages[] | \
+                    select(.name==$PKG) | \
+                    .version')
 
+                  echo "Package: ${{ matrix.package }}"
                   echo "Parsed Tag Version: $TAG_VERSION"
                   echo "Cargo.toml Version: $CARGO_VERSION"
 
                   if [ "$CARGO_VERSION" != "$TAG_VERSION" ]; then
-                    echo "Version missmatch. Tag: $TAG_VERSION, Cargo: $CARGO_VERSION"
+                    echo "Version mismatch!"
                     exit 1
                   fi
 
-            - name: Publish core crate
+            - name: Publish crate
               env:
                   CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-              run: cargo publish -p ogn-aprs-parser
+              if: steps.check.outputs.match == 'true'
+              run: cargo publish -p ${{ matrix.package }}
