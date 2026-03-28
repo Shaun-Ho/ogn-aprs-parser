@@ -1,6 +1,6 @@
 [package]
 name = "ogn-aprs-parser"
-version = "0.1.0-rc2"
+version = "0.1.0-rc3"
 rust-version = { workspace = true }
 edition = { workspace = true }
 description = "Library to parse OGN APRS messages"
