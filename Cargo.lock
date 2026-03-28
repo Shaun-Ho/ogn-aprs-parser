@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "ogn-aprs-parser"
+name = "ogn_aprs_parser"
 version = "0.1.0"
