@@ -1,0 +1,28 @@
+---
+name: Release and Publish
+
+# yamllint disable-line rule:truthy
+on:
+    release:
+        types: [published]
+
+jobs:
+    run-ci:
+        uses: ../ci.yml
+
+    publish-rust-crate:
+        name: Publish ogn-aprs-parser
+        needs: [run-ci]
+        if: startsWith(github.event.release.tag_name, 'ogn-aprs-parser@v')
+        runs-on: ubuntu-latest
+        environment:
+            name: crates-io-release
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Setup Rust toolchain
+              uses: actions-rust-lang/setup-rust-toolchain@v1
+            - name: Publish to Crates.io
+              env:
+                  CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+              run: cargo publish -p ogn-aprs-parser
