@@ -8,7 +8,7 @@ on:
 
 jobs:
     run-ci:
-        uses: ../ci.yml
+        uses: ./.github/workflows/ci.yml
 
     publish-rust-crate:
         name: Publish ogn-aprs-parser
