@@ -39,9 +39,8 @@ jobs:
         runs-on: ubuntu-latest
         environment:
             name: pypi-release
-        # Trusted publishing on pypi
         permissions:
-            id-token: write
+            id-token: write  # Required for OIDC token exchange - trusted publishing on PyPI
         steps:
             - uses: actions/checkout@v4
 
