@@ -4,10 +4,10 @@ name: CI
 # yamllint disable-line rule:truthy
 on:
     pull_request:
-    push:
         branches: ['**']
-    release:
-        types: [published]
+    push:
+        branches: [main]
+    workflow_call:
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
@@ -119,46 +119,3 @@ jobs:
               run: go install github.com/google/yamlfmt/cmd/yamlfmt@latest
             - name: Run yamlfmt
               run: yamlfmt .
-
-    cargo-publish:
-        name: Publish ogn-aprs-parser
-        needs:
-            - cargo-build
-            - cargo-fmt
-            - cargo-clippy
-            - cargo-doc
-            - cargo-next-test
-            - typos-cli
-            - taplo-toml-fmt
-            - yamlfmt
-        if: github.event_name == 'release' && contains(github.event.release.tag_name, 'ogn-aprs-parser@')
-        runs-on: ubuntu-latest
-        environment:
-            name: crates-io-release
-        steps:
-            - name: Fetch Repository
-              uses: actions/checkout@v4
-
-            - name: Install stable toolchain
-              uses: actions-rust-lang/setup-rust-toolchain@v1
-
-            - name: Verify Tag and Version
-              shell: bash
-              run: |
-                  REF_NAME="${{ github.ref }}"
-                  TAG_VERSION=${REF_NAME##*@v}
-
-                  CARGO_VERSION=$(cargo metadata --format-version 1 --no-deps | jq -r '.packages[] | select(.name=="ogn-aprs-parser") | .version')
-
-                  echo "Parsed Tag Version: $TAG_VERSION"
-                  echo "Cargo.toml Version: $CARGO_VERSION"
-
-                  if [ "$CARGO_VERSION" != "$TAG_VERSION" ]; then
-                    echo "Version missmatch. Tag: $TAG_VERSION, Cargo: $CARGO_VERSION"
-                    exit 1
-                  fi
-
-            - name: Publish core crate
-              env:
-                  CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-              run: cargo publish -p ogn-aprs-parser

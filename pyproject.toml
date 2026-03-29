@@ -1,0 +1,5 @@
+[tool.uv.sources]
+ogn-aprs-parser = { workspace = true }
+
+[tool.uv.workspace]
+members = ["pyo3"]
