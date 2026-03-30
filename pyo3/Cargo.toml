@@ -10,12 +10,17 @@ repository = "https://github.com/Shaun-Ho/ogn-aprs-parser"
 readme = "README.md"
 
 [lib]
-name = "ogn_aprs_parser_pyo3"
+name = "ogn_aprs_parser"
 crate-type = ["cdylib"]
 
 
 [dependencies]
-pyo3 = { version = "0.28.2", features = ["extension-module", "abi3-py310"] }
+pyo3 = { version = "0.28.2", features = [
+  "extension-module",
+  "abi3-py310",
+  "chrono",
+] }
 ogn-aprs-parser = { path = "../core" }
+chrono = "0.4.44"
 
 [dev-dependencies]
