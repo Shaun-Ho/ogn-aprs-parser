@@ -1,0 +1,13 @@
+version = 1
+revision = 3
+requires-python = ">=3.10"
+
+[manifest]
+members = [
+    "ogn-aprs-parser",
+]
+
+[[package]]
+name = "ogn-aprs-parser"
+version = "0.1.0"
+source = { editable = "pyo3" }

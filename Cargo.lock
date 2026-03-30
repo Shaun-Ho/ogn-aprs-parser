@@ -245,6 +245,7 @@ dependencies = [
 name = "ogn-aprs-parser-pyo3"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "ogn-aprs-parser",
  "pyo3",
 ]
@@ -291,6 +292,7 @@ version = "0.28.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf85e27e86080aafd5a22eae58a162e133a589551542b3e5cee4beb27e54f8e1"
 dependencies = [
+ "chrono",
  "libc",
  "once_cell",
  "portable-atomic",
