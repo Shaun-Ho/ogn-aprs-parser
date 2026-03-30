@@ -12,6 +12,7 @@ readme = "README.md"
 [lib]
 name = "ogn_aprs_parser"
 crate-type = ["cdylib"]
+doc = false
 
 
 [dependencies]
