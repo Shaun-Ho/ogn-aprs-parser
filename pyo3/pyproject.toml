@@ -9,10 +9,98 @@ version = "0.1.0"
 dependencies = []
 
 [dependency-groups]
+test = ["pytest>=9.0.2"]
+lint = ["ruff>=0.15.8"]
+dev = [{ include-group = "test" }, { include-group = "lint" }]
 
 [tool.maturin]
 manifest-path = "Cargo.toml"
 features = ["pyo3/abi3-py310"]
+python = "."
+
+
+[tool.ruff.lint]
+select = [
+  "A",
+  "AIR",
+  "ANN",
+  "ARG",
+  "ASYNC",
+  "B",
+  "BLE",
+  "C4",
+  "COM",
+  "C90",
+  "DTZ",
+  "DJ",
+  "E",
+  "EM",
+  "ERA",
+  "EXE",
+  "F",
+  "FA",
+  "FLY",
+  "FIX",
+  "FURB",
+  "G",
+  "I",
+  "ICN",
+  "INP",
+  "INT",
+  "ISC",
+  "LOG",
+  "N",
+  "NPY",
+  "PIE",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "PT",
+  "PTH",
+  "PYI",
+  "PD",
+  "PERF",
+  "PGH",
+  "Q",
+  "RUF",
+  "RSE",
+  "RET",
+  "S",
+  "SLF",
+  "SLOT",
+  "SIM",
+  "T10",
+  "T20",
+  "TC",
+  "TD",
+  "TID",
+  "TRY",
+  "UP",
+  "W",
+  "YTT",
+
+]
+preview = true
+ignore = ["COM812", "FIX002", "TC006", "TD003", "TD005"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["ARG", "FBT", "INP001", "S101"]
+"tests/test_types.py" = ["E501"]
+
+[tool.lint.flake8-builtints]
+strict-checking = true
+
+[tool.lint.type-checking]
+strict = true
+
+[tool.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.lint.isort]
+required-imports = ["from __future__ import annotations"]
+known-first-party = ["ogn_aprs_parser"]
+
 
 [tool.uv]
 cache-keys = [
