@@ -1,41 +1,9 @@
 use pyo3::{exceptions::PyValueError, prelude::*};
 
+pub use self::enums::{PyOGNAddressType, PyOGNAircraftType, PyOgnAprsProtocol};
+
 #[cfg(feature = "stubgen")]
-use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pyclass_enum, gen_stub_pymethods};
-
-macro_rules! mirror_enum {
-    ($src:ty, $name:ident, $pyname: expr, [$($v:ident),* $(,)?]) => {
-        #[cfg_attr(feature = "stubgen", gen_stub_pyclass_enum)]
-        #[pyclass(eq, eq_int, rename_all = "SCREAMING_SNAKE_CASE", from_py_object, name = $pyname)]
-        #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-        pub enum $name {
-            $( $v = <$src>::$v as isize ),*
-        }
-        impl $name {
-            fn __repr__(&self) -> String {
-            format!("{:?}", self)
-        }
-        }
-
-        impl From<$src> for $name {
-            fn from(v: $src) -> Self {
-                #[allow(unreachable_patterns)] // Add this to silence the warning
-                match v {
-                    $( <$src>::$v => Self::$v, )*
-                    _ => panic!("Unmapped variant in {}", stringify!($src)),
-                }
-            }
-        }
-
-        impl From<$name> for $src {
-            fn from(v: $name) -> Self {
-                match v {
-                    $( $name::$v => <$src>::$v, )*
-                }
-            }
-        }
-    };
-}
+use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[cfg_attr(feature = "stubgen", gen_stub_pyclass)]
 #[pyclass(name = "AircraftBeacon", eq, from_py_object)]
@@ -56,6 +24,7 @@ pub struct PyAircraftBeacon {
 #[cfg_attr(feature = "stubgen", gen_stub_pymethods)]
 #[pymethods]
 impl PyAircraftBeacon {
+    #[allow(clippy::too_many_arguments)]
     #[new]
     fn py_new(
         callsign: String,
@@ -106,43 +75,6 @@ impl From<ogn_aprs_parser::AircraftBeacon> for PyAircraftBeacon {
         }
     }
 }
-
-mirror_enum!(
-    ogn_aprs_parser::OgnAprsProtocol,
-    PyOgnAprsProtocol,
-    "OgnAprsProtocol",
-    [OGADSB, OGFLR, OGNSKY]
-);
-
-mirror_enum!(
-    ogn_aprs_parser::OGNAircraftType,
-    PyOGNAircraftType,
-    "OGNAircraftType",
-    [
-        Reserved,
-        Glider,
-        TowPlane,
-        Helicopter,
-        Parachute,
-        DropPlane,
-        HangGlider,
-        Paraglider,
-        ReciprocatingEngineAircraft,
-        JetTurbopropAircraft,
-        Unknown,
-        Balloon,
-        Airship,
-        UAVs,
-        StaticObstacle,
-    ]
-);
-
-mirror_enum!(
-    ogn_aprs_parser::OGNAddressType,
-    PyOGNAddressType,
-    "OGNAddressType",
-    [Unknown, ICAO, FLARM, OGNTracker]
-);
 
 #[cfg_attr(feature = "stubgen", gen_stub_pyclass)]
 #[pyclass(name = "ICAOAddress", eq, from_py_object)]
@@ -234,4 +166,81 @@ impl From<ogn_aprs_parser::OGNIDPrefix> for PyOGNIDPrefix {
             stealth_mode: value.stealth_mode,
         }
     }
+}
+
+#[allow(clippy::upper_case_acronyms)]
+mod enums {
+    use pyo3::prelude::*;
+    #[cfg(feature = "stubgen")]
+    use pyo3_stub_gen::derive::gen_stub_pyclass_enum;
+    macro_rules! mirror_enum {
+        ($src:ty, $name:ident, $pyname: expr, [$($v:ident),* $(,)?]) => {
+            #[cfg_attr(feature = "stubgen", gen_stub_pyclass_enum)]
+            #[pyclass(eq, eq_int, rename_all = "SCREAMING_SNAKE_CASE", from_py_object, name = $pyname)]
+            #[derive(Copy, Clone, Debug, PartialEq, Eq)]
+            pub enum $name {
+                $( $v = <$src>::$v as isize ),*
+            }
+            impl $name {
+                fn __repr__(&self) -> String {
+                format!("{:?}", self)
+            }
+            }
+
+            impl From<$src> for $name {
+                fn from(v: $src) -> Self {
+                    #[allow(unreachable_patterns)] // Add this to silence the warning
+                    match v {
+                        $( <$src>::$v => Self::$v, )*
+                        _ => panic!("Unmapped variant in {}", stringify!($src)),
+                    }
+                }
+            }
+
+            impl From<$name> for $src {
+                fn from(v: $name) -> Self {
+                    match v {
+                        $( $name::$v => <$src>::$v, )*
+                    }
+                }
+            }
+        };
+    }
+
+    mirror_enum!(
+        ogn_aprs_parser::OgnAprsProtocol,
+        PyOgnAprsProtocol,
+        "OgnAprsProtocol",
+        [OGADSB, OGFLR, OGNSKY]
+    );
+
+    mirror_enum!(
+        ogn_aprs_parser::OGNAircraftType,
+        PyOGNAircraftType,
+        "OGNAircraftType",
+        [
+            Reserved,
+            Glider,
+            TowPlane,
+            Helicopter,
+            Parachute,
+            DropPlane,
+            HangGlider,
+            Paraglider,
+            ReciprocatingEngineAircraft,
+            JetTurbopropAircraft,
+            Unknown,
+            Balloon,
+            Airship,
+            UAVs,
+            StaticObstacle,
+        ]
+    );
+
+    mirror_enum!(
+        ogn_aprs_parser::OGNAddressType,
+        PyOGNAddressType,
+        "OGNAddressType",
+        [Unknown, ICAO, FLARM, OGNTracker]
+    );
 }
