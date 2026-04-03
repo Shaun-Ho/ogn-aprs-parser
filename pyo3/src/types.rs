@@ -1,7 +1,11 @@
 use pyo3::{exceptions::PyValueError, prelude::*};
 
+#[cfg(feature = "stubgen")]
+use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pyclass_enum, gen_stub_pymethods};
+
 macro_rules! mirror_enum {
     ($src:ty, $name:ident, $pyname: expr, [$($v:ident),* $(,)?]) => {
+        #[cfg_attr(feature = "stubgen", gen_stub_pyclass_enum)]
         #[pyclass(eq, eq_int, rename_all = "SCREAMING_SNAKE_CASE", from_py_object, name = $pyname)]
         #[derive(Copy, Clone, Debug, PartialEq, Eq)]
         pub enum $name {
@@ -33,6 +37,7 @@ macro_rules! mirror_enum {
     };
 }
 
+#[cfg_attr(feature = "stubgen", gen_stub_pyclass)]
 #[pyclass(name = "AircraftBeacon", eq, from_py_object)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PyAircraftBeacon {
@@ -48,6 +53,7 @@ pub struct PyAircraftBeacon {
     pub gps_altitude: f64,
     pub ogn_beacon_id: PyOGNBeaconID,
 }
+#[cfg_attr(feature = "stubgen", gen_stub_pymethods)]
 #[pymethods]
 impl PyAircraftBeacon {
     #[new]
@@ -138,9 +144,11 @@ mirror_enum!(
     [Unknown, ICAO, FLARM, OGNTracker]
 );
 
+#[cfg_attr(feature = "stubgen", gen_stub_pyclass)]
 #[pyclass(name = "ICAOAddress", eq, from_py_object)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PyICAOAddress(pub u32);
+#[cfg_attr(feature = "stubgen", gen_stub_pymethods)]
 #[pymethods]
 impl PyICAOAddress {
     #[new]
@@ -150,9 +158,9 @@ impl PyICAOAddress {
             .map_err(|e| PyValueError::new_err(e.to_string()))?;
         Ok(py_icao_address)
     }
-    // fn __repr__(&self) -> String {
-    //     format!("{:?}", self)
-    // }
+    fn __repr__(&self) -> String {
+        format!("{:?}", self)
+    }
 }
 impl From<ogn_aprs_parser::ICAOAddress> for PyICAOAddress {
     fn from(value: ogn_aprs_parser::ICAOAddress) -> Self {
@@ -160,12 +168,14 @@ impl From<ogn_aprs_parser::ICAOAddress> for PyICAOAddress {
     }
 }
 
+#[cfg_attr(feature = "stubgen", gen_stub_pyclass)]
 #[pyclass(name = "OGNBeaconID", eq, from_py_object)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PyOGNBeaconID {
     pub prefix: PyOGNIDPrefix,
     pub icao_address: PyICAOAddress,
 }
+#[cfg_attr(feature = "stubgen", gen_stub_pymethods)]
 #[pymethods]
 impl PyOGNBeaconID {
     #[new]
@@ -175,11 +185,10 @@ impl PyOGNBeaconID {
             icao_address,
         }
     }
-    // fn __repr__(&self) -> String {
-    //     format!("{:?}", self)
-    // }
+    fn __repr__(&self) -> String {
+        format!("{:?}", self)
+    }
 }
-
 impl From<ogn_aprs_parser::OGNBeaconID> for PyOGNBeaconID {
     fn from(value: ogn_aprs_parser::OGNBeaconID) -> Self {
         PyOGNBeaconID {
@@ -189,6 +198,7 @@ impl From<ogn_aprs_parser::OGNBeaconID> for PyOGNBeaconID {
     }
 }
 
+#[cfg_attr(feature = "stubgen", gen_stub_pyclass)]
 #[pyclass(name = "OGNIDPrefix", eq, from_py_object)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PyOGNIDPrefix {
@@ -197,6 +207,7 @@ pub struct PyOGNIDPrefix {
     pub no_track: bool,
     pub stealth_mode: bool,
 }
+#[cfg_attr(feature = "stubgen", gen_stub_pymethods)]
 #[pymethods]
 impl PyOGNIDPrefix {
     #[new]
@@ -214,7 +225,6 @@ impl PyOGNIDPrefix {
         }
     }
 }
-
 impl From<ogn_aprs_parser::OGNIDPrefix> for PyOGNIDPrefix {
     fn from(value: ogn_aprs_parser::OGNIDPrefix) -> Self {
         PyOGNIDPrefix {
