@@ -1,8 +1,7 @@
 use pyo3::prelude::*;
 
 #[pymodule]
-#[pyo3(name = "ogn_aprs_parser")]
-mod expose {
+mod ogn_aprs_parser_pyo3 {
     use crate::types::{
         PyAircraftBeacon, PyICAOAddress, PyOGNAddressType, PyOGNAircraftType, PyOGNBeaconID,
         PyOGNIDPrefix, PyOgnAprsProtocol,
@@ -10,6 +9,9 @@ mod expose {
     use pyo3::PyResult;
     use pyo3::exceptions::PyValueError;
     use pyo3::prelude::*;
+
+    #[cfg(feature = "stubgen")]
+    use pyo3_stub_gen::derive::gen_stub_pyfunction;
 
     #[pymodule_init]
     fn init(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -24,10 +26,11 @@ mod expose {
         Ok(())
     }
 
+    #[cfg_attr(feature = "stubgen", gen_stub_pyfunction)]
     #[pyfunction]
     #[pyo3(name = "parse_ogn_aprs_aircraft_beacon")]
-    fn parse_ogn_aprs_aircraft_beacon_py(input: &[u8]) -> PyResult<PyAircraftBeacon> {
-        ogn_aprs_parser::parse_ogn_aprs_aircraft_beacon(input)
+    fn parse_ogn_aprs_aircraft_beacon_py(input: Vec<u8>) -> PyResult<PyAircraftBeacon> {
+        ogn_aprs_parser::parse_ogn_aprs_aircraft_beacon(&input)
             .map(PyAircraftBeacon::from)
             .map_err(|e| PyValueError::new_err(format!("Parse error: {:?}", e)))
     }
