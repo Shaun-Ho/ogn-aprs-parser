@@ -10,10 +10,12 @@ repository = "https://github.com/Shaun-Ho/ogn-aprs-parser"
 readme = "README.md"
 
 [lib]
-name = "ogn_aprs_parser"
-crate-type = ["cdylib"]
+name = "ogn_aprs_parser_pyo3"
+crate-type = ["cdylib", "rlib"]
 doc = false
 
+[features]
+stubgen = ["dep:pyo3-stub-gen"]
 
 [dependencies]
 pyo3 = { version = "0.28.2", features = [
@@ -23,5 +25,6 @@ pyo3 = { version = "0.28.2", features = [
 ] }
 ogn-aprs-parser = { path = "../core" }
 chrono = "0.4.44"
+pyo3-stub-gen = { version = "0.21", optional = true }
 
 [dev-dependencies]

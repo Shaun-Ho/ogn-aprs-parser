@@ -17,6 +17,7 @@ dev = [{ include-group = "test" }, { include-group = "lint" }]
 manifest-path = "Cargo.toml"
 features = ["pyo3/abi3-py310"]
 python = "."
+module-name = "ogn_aprs_parser.ogn_aprs_parser_pyo3"
 
 
 [tool.ruff.lint]
