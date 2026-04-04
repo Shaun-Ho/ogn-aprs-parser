@@ -80,10 +80,6 @@ select = [
 preview = true
 ignore = ["COM812", "FIX002", "TC006", "TD003", "TD005"]
 
-[tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["ARG", "FBT", "INP001", "S101"]
-"tests/test_types.py" = ["E501"]
-
 [tool.lint.flake8-builtints]
 strict-checking = true
 

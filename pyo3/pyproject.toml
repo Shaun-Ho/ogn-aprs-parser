@@ -15,6 +15,10 @@ features = ["pyo3/abi3-py310"]
 python-source = "."
 module-name = "ogn_aprs_parser.ogn_aprs_parser_pyo3"
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["ARG", "FBT", "INP001", "S101"]
+"tests/test_types.py" = ["E501"]
+
 
 [tool.uv]
 cache-keys = [
