@@ -1,6 +1,6 @@
 [package]
 name = "ogn-aprs-parser-pyo3"
-version = "0.1.0-rc1"
+version = "0.1.0-rc2"
 rust-version = { workspace = true }
 edition = { workspace = true }
 description = "Collection of Rust bindings to the ogn-aprs-parser crate"

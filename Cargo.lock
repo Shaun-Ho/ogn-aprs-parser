@@ -422,7 +422,7 @@ dependencies = [
 
 [[package]]
 name = "ogn-aprs-parser-pyo3"
-version = "0.1.0-rc1"
+version = "0.1.0-rc2"
 dependencies = [
  "chrono",
  "ogn-aprs-parser",
