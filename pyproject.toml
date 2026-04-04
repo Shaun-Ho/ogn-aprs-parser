@@ -12,6 +12,7 @@ dev = [
   { include-group = "test" },
   { include-group = "lint" },
   { include-group = "type-check" },
+  "poethepoet>=0.43.0",
 ]
 
 
@@ -96,3 +97,10 @@ required-imports = ["from __future__ import annotations"]
 disable-project-excludes-heuristics = true
 project-includes = ["pyo3/**/*.py*"]
 project-excludes = ["**/node_modules", "**/__pycache__", "**/venv/**/*"]
+
+[tool.poe.tasks]
+test = "pytest"
+ruff-check = "ruff check"
+ruff-format = "ruff format"
+lint = ["ruff-check", "ruff-format"]
+type-check = "pyrefly check"

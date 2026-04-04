@@ -119,3 +119,33 @@ jobs:
               run: go install github.com/google/yamlfmt/cmd/yamlfmt@latest
             - name: Run yamlfmt
               run: yamlfmt .
+
+    python-test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Fetch Repository
+              uses: actions/checkout@v4
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+            - name: Run pytest
+              run: uv run poe test
+
+    python-lint:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Fetch Repository
+              uses: actions/checkout@v4
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+            - name: Run ruff
+              run: uv run poe lint
+
+    python-type-check:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Fetch Repository
+              uses: actions/checkout@v4
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+            - name: Run pyrefly
+              run: uv run poe type-check
