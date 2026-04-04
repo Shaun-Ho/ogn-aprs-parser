@@ -9,16 +9,27 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 #[pyclass(name = "AircraftBeacon", eq, from_py_object)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PyAircraftBeacon {
+    #[pyo3(get, set)]
     pub callsign: String,
+    #[pyo3(get, set)]
     pub q_construct: String,
+    #[pyo3(get, set)]
     pub receiver: String,
+    #[pyo3(get, set)]
     pub ogn_aprs_protocol: PyOgnAprsProtocol,
+    #[pyo3(get, set)]
     pub time: chrono::NaiveTime,
+    #[pyo3(get, set)]
     pub latitude: f64,
+    #[pyo3(get, set)]
     pub longitude: f64,
+    #[pyo3(get, set)]
     pub ground_track: f64,
+    #[pyo3(get, set)]
     pub ground_speed: f64,
+    #[pyo3(get, set)]
     pub gps_altitude: f64,
+    #[pyo3(get, set)]
     pub ogn_beacon_id: PyOGNBeaconID,
 }
 #[cfg_attr(feature = "stubgen", gen_stub_pymethods)]
@@ -52,6 +63,24 @@ impl PyAircraftBeacon {
             gps_altitude,
             ogn_beacon_id,
         }
+    }
+
+    #[allow(unused_variables)]
+    fn __init__(
+        &self,
+        callsign: String,
+        q_construct: String,
+        receiver: String,
+        ogn_aprs_protocol: PyOgnAprsProtocol,
+        time: chrono::NaiveTime,
+        latitude: f64,
+        longitude: f64,
+        ground_track: f64,
+        ground_speed: f64,
+        gps_altitude: f64,
+        ogn_beacon_id: PyOGNBeaconID,
+    ) -> PyResult<()> {
+        Ok(())
     }
 
     fn __repr__(&self) -> String {
@@ -104,7 +133,9 @@ impl From<ogn_aprs_parser::ICAOAddress> for PyICAOAddress {
 #[pyclass(name = "OGNBeaconID", eq, from_py_object)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PyOGNBeaconID {
+    #[pyo3(get, set)]
     pub prefix: PyOGNIDPrefix,
+    #[pyo3(get, set)]
     pub icao_address: PyICAOAddress,
 }
 #[cfg_attr(feature = "stubgen", gen_stub_pymethods)]
@@ -134,9 +165,13 @@ impl From<ogn_aprs_parser::OGNBeaconID> for PyOGNBeaconID {
 #[pyclass(name = "OGNIDPrefix", eq, from_py_object)]
 #[derive(Clone, Debug, PartialEq)]
 pub struct PyOGNIDPrefix {
+    #[pyo3(get, set)]
     pub aircraft_type: PyOGNAircraftType,
+    #[pyo3(get, set)]
     pub address_type: PyOGNAddressType,
+    #[pyo3(get, set)]
     pub no_track: bool,
+    #[pyo3(get, set)]
     pub stealth_mode: bool,
 }
 #[cfg_attr(feature = "stubgen", gen_stub_pymethods)]
@@ -170,54 +205,69 @@ impl From<ogn_aprs_parser::OGNIDPrefix> for PyOGNIDPrefix {
 
 #[allow(clippy::upper_case_acronyms)]
 mod enums {
-    use pyo3::prelude::*;
-    #[cfg(feature = "stubgen")]
-    use pyo3_stub_gen::derive::gen_stub_pyclass_enum;
     macro_rules! mirror_enum {
-        ($src:ty, $name:ident, $pyname: expr, [$($v:ident),* $(,)?]) => {
-            #[cfg_attr(feature = "stubgen", gen_stub_pyclass_enum)]
-            #[pyclass(eq, eq_int, rename_all = "SCREAMING_SNAKE_CASE", from_py_object, name = $pyname)]
-            #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-            pub enum $name {
-                $( $v = <$src>::$v as isize ),*
-            }
-            impl $name {
-                fn __repr__(&self) -> String {
-                format!("{:?}", self)
-            }
-            }
+        ($src:ty, $name:ident, $pyname:ident, [$($v:ident),* $(,)?]) => {
+            #[allow(non_snake_case)]
+            mod $pyname {
+                use super::super::*;
+                #[cfg(feature = "stubgen")]
+                use pyo3_stub_gen::derive::gen_stub_pyclass_enum;
 
-            impl From<$src> for $name {
-                fn from(v: $src) -> Self {
-                    #[allow(unreachable_patterns)] // Add this to silence the warning
-                    match v {
-                        $( <$src>::$v => Self::$v, )*
-                        _ => panic!("Unmapped variant in {}", stringify!($src)),
+                // The inner enum is exact python enum name
+                #[cfg_attr(feature = "stubgen", gen_stub_pyclass_enum)]
+                #[pyclass(
+                    eq,
+                    eq_int,
+                    rename_all = "SCREAMING_SNAKE_CASE",
+                    from_py_object
+                )]
+                #[derive(Copy, Clone, Debug, PartialEq, Eq)]
+                pub enum $pyname {
+                    $($v = <$src>::$v as isize),*
+                }
+
+                #[pymethods]
+                impl $pyname {
+                    fn __repr__(&self) -> String {
+                        format!("{:?}", self)
+                    }
+                }
+
+                impl From<$src> for $pyname {
+                    fn from(v: $src) -> Self {
+                        #[allow(unreachable_patterns)]
+                        match v {
+                            $(<$src>::$v => Self::$v,)*
+                            _ => panic!("Unmapped variant in {}", stringify!($src)),
+                        }
+                    }
+                }
+
+                impl From<$pyname> for $src {
+                    fn from(v: $pyname) -> Self {
+                        match v {
+                            $($pyname::$v => <$src>::$v,)*
+                        }
                     }
                 }
             }
 
-            impl From<$name> for $src {
-                fn from(v: $name) -> Self {
-                    match v {
-                        $( $name::$v => <$src>::$v, )*
-                    }
-                }
-            }
+            // export python named enum as the rust enum
+            pub use $pyname::$pyname as $name;
         };
     }
 
     mirror_enum!(
         ogn_aprs_parser::OgnAprsProtocol,
         PyOgnAprsProtocol,
-        "OgnAprsProtocol",
+        OgnAprsProtocol,
         [OGADSB, OGFLR, OGNSKY]
     );
 
     mirror_enum!(
         ogn_aprs_parser::OGNAircraftType,
         PyOGNAircraftType,
-        "OGNAircraftType",
+        OGNAircraftType,
         [
             Reserved,
             Glider,
@@ -240,7 +290,7 @@ mod enums {
     mirror_enum!(
         ogn_aprs_parser::OGNAddressType,
         PyOGNAddressType,
-        "OGNAddressType",
+        OGNAddressType,
         [Unknown, ICAO, FLARM, OGNTracker]
     );
 }
