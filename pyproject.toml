@@ -1,5 +1,106 @@
 [tool.uv.sources]
-ogn-aprs-parser = { workspace = true }
+ogn-aprs-parser-pyo3 = { workspace = true }
 
 [tool.uv.workspace]
 members = ["pyo3"]
+
+[dependency-groups]
+test = ["pytest>=9.0.2"]
+lint = ["ruff>=0.15.8"]
+type-check = ["pyrefly>=0.59.1"]
+dev = [
+  { include-group = "test" },
+  { include-group = "lint" },
+  { include-group = "type-check" },
+  "poethepoet>=0.43.0",
+]
+
+
+[tool.ruff.lint]
+select = [
+  "A",
+  "AIR",
+  "ANN",
+  "ARG",
+  "ASYNC",
+  "B",
+  "BLE",
+  "C4",
+  "COM",
+  "C90",
+  "DTZ",
+  "DJ",
+  "E",
+  "EM",
+  "ERA",
+  "EXE",
+  "F",
+  "FA",
+  "FLY",
+  "FIX",
+  "FURB",
+  "G",
+  "I",
+  "ICN",
+  "INP",
+  "INT",
+  "ISC",
+  "LOG",
+  "N",
+  "NPY",
+  "PIE",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "PT",
+  "PTH",
+  "PYI",
+  "PD",
+  "PERF",
+  "PGH",
+  "Q",
+  "RUF",
+  "RSE",
+  "RET",
+  "S",
+  "SLF",
+  "SLOT",
+  "SIM",
+  "T10",
+  "T20",
+  "TC",
+  "TD",
+  "TID",
+  "TRY",
+  "UP",
+  "W",
+  "YTT",
+
+]
+preview = true
+ignore = ["COM812", "FIX002", "TC006", "TD003", "TD005"]
+
+[tool.lint.flake8-builtints]
+strict-checking = true
+
+[tool.lint.flake8-type-checking]
+strict = true
+
+[tool.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.lint.isort]
+required-imports = ["from __future__ import annotations"]
+
+[tool.pyrefly]
+disable-project-excludes-heuristics = true
+project-includes = ["pyo3/**/*.py*"]
+project-excludes = ["**/node_modules", "**/__pycache__", "**/venv/**/*"]
+
+[tool.poe.tasks]
+test = "pytest"
+ruff-check = "ruff check"
+ruff-format = "ruff format"
+lint = ["ruff-check", "ruff-format"]
+type-check = "pyrefly check"

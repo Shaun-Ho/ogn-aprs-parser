@@ -29,3 +29,20 @@ repos:
       rev: 0.2.1
       hooks:
           - id: yamlfmt
+
+
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.15.8
+      hooks:
+          - id: ruff-check
+            args: [--fix]
+          - id: ruff-format
+
+
+    - repo: https://github.com/facebook/pyrefly-pre-commit
+      rev: 0.59.1
+      hooks:
+          - id: pyrefly-check
+            name: Pyrefly (type checking)
+            pass_filenames: false
+            language: system
