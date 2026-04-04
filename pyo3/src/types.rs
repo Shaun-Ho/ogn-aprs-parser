@@ -65,7 +65,7 @@ impl PyAircraftBeacon {
         }
     }
 
-    #[allow(unused_variables)]
+    #[allow(unused_variables, clippy::too_many_arguments)]
     fn __init__(
         &self,
         callsign: String,
