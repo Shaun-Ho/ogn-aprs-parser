@@ -29,7 +29,9 @@ mod ogn_aprs_parser_pyo3 {
     #[cfg_attr(feature = "stubgen", gen_stub_pyfunction)]
     #[pyfunction]
     #[pyo3(name = "parse_ogn_aprs_aircraft_beacon")]
-    fn parse_ogn_aprs_aircraft_beacon_py(input: Vec<u8>) -> PyResult<PyAircraftBeacon> {
+    fn parse_ogn_aprs_aircraft_beacon_py(
+        input: std::borrow::Cow<[u8]>,
+    ) -> PyResult<PyAircraftBeacon> {
         ogn_aprs_parser::parse_ogn_aprs_aircraft_beacon(&input)
             .map(PyAircraftBeacon::from)
             .map_err(|e| PyValueError::new_err(format!("Parse error: {:?}", e)))
