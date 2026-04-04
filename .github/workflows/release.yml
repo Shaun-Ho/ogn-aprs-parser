@@ -1,5 +1,5 @@
 ---
-name: Release and Publish
+name: Release Rust Crate
 
 # yamllint disable-line rule:truthy
 on:
