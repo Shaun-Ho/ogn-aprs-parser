@@ -50,7 +50,7 @@ wheels = [
 
 [[package]]
 name = "ogn-aprs-parser"
-version = "0.1.0"
+version = "0.1.0rc1"
 source = { editable = "pyo3" }
 
 [[package]]
