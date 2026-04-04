@@ -19,7 +19,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install stable toolchain
               uses: actions-rust-lang/setup-rust-toolchain@v1
             - name: cargo build
@@ -30,7 +30,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install stable toolchain
               uses: actions-rust-lang/setup-rust-toolchain@v1
               with:
@@ -43,7 +43,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install stable toolchain
               uses: actions-rust-lang/setup-rust-toolchain@v1
               with:
@@ -56,7 +56,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install stable toolchain
               uses: actions-rust-lang/setup-rust-toolchain@v1
             - name: Cargo doc test
@@ -67,7 +67,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install stable toolchain
               uses: actions-rust-lang/setup-rust-toolchain@v1
             - name: Install cargo-nextest
@@ -84,7 +84,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install Typos
               uses: taiki-e/install-action@v2
               with:
@@ -97,7 +97,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install Taplo
               uses: taiki-e/install-action@v2
               with:
@@ -110,7 +110,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - uses: actions/setup-go@v5
               with:
                   go-version: stable
@@ -124,7 +124,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install uv
               uses: astral-sh/setup-uv@v7
             - name: Run pytest
@@ -134,7 +134,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install uv
               uses: astral-sh/setup-uv@v7
             - name: Run ruff
@@ -144,7 +144,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Fetch Repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             - name: Install uv
               uses: astral-sh/setup-uv@v7
             - name: Run pyrefly
