@@ -7,6 +7,14 @@ members = [
     "ogn-aprs-parser",
 ]
 
+[manifest.dependency-groups]
+dev = [
+    { name = "pytest", specifier = ">=9.0.2" },
+    { name = "ruff", specifier = ">=0.15.8" },
+]
+lint = [{ name = "ruff", specifier = ">=0.15.8" }]
+test = [{ name = "pytest", specifier = ">=9.0.2" }]
+
 [[package]]
 name = "colorama"
 version = "0.4.6"
@@ -41,28 +49,6 @@ wheels = [
 name = "ogn-aprs-parser"
 version = "0.1.0"
 source = { editable = "pyo3" }
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "ruff" },
-]
-lint = [
-    { name = "ruff" },
-]
-test = [
-    { name = "pytest" },
-]
-
-[package.metadata]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "pytest", specifier = ">=9.0.2" },
-    { name = "ruff", specifier = ">=0.15.8" },
-]
-lint = [{ name = "ruff", specifier = ">=0.15.8" }]
-test = [{ name = "pytest", specifier = ">=9.0.2" }]
 
 [[package]]
 name = "packaging"
