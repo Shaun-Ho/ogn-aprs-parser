@@ -1,5 +1,5 @@
 ---
-name: Release and Publish
+name: Release Python Package
 
 # yamllint disable-line rule:truthy
 on:
