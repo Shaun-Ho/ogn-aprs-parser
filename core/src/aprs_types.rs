@@ -14,7 +14,7 @@ use crate::errors::{
 /// Supported OGN APRS protocols indicating the source or format of the data.
 #[allow(clippy::upper_case_acronyms)]
 #[derive(Debug, PartialEq, Eq, Clone, Copy, strum_macros::EnumString)]
-pub enum OgnAprsProtocol {
+pub enum OGNAPRSProtocol {
     /// OGN ADS-B rebroadcast.
     OGADSB,
     /// FLARM tracker rebroadcast.
@@ -23,8 +23,8 @@ pub enum OgnAprsProtocol {
     OGNSKY,
 }
 
-impl OgnAprsProtocol {
-    /// Parses a string into an [`OgnAprsProtocol`].
+impl OGNAPRSProtocol {
+    /// Parses a string into an [`OGNAPRSProtocol`].
     ///
     /// # Arguments
     ///

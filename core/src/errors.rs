@@ -5,7 +5,7 @@ pub enum AircraftParseError {
     #[error("{0}")]
     ParseError(#[from] APRSMessageParseError),
     #[error("Missing OGN Beacon ID in APRS message")]
-    MissingOgnBeaconID,
+    MissingOGNBeaconID,
 }
 
 #[derive(Debug, thiserror::Error)]
