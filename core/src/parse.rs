@@ -1,6 +1,12 @@
+//! This module provides functionality to parse OGN (Open Glider Network) APRS
+//! (Automatic Packet Reporting System) messages. It uses the `nom` crate for
+//! parser combinators to extract aircraft telemetry and identification data.
+//!
+//! Documentation about the message position report can be found on the [OGN website](http://wiki.glidernet.org/aprs-interaction-examples)
+
 use super::errors::{APRSMessageParseError, APRSParseContext};
 use crate::{
-    aprs_types::{OGNBeaconID, OgnAprsProtocol},
+    aprs_types::{OGNAPRSProtocol, OGNBeaconID},
     errors::AircraftParseError,
 };
 
@@ -9,21 +15,53 @@ use nom::{
     bytes::complete::{tag, take, take_until},
 };
 
+/// Represents a parsed OGN (Open Glider Network) APRS aircraft beacon.
+///
+/// This struct contains all the extracted telemetric and identification data
+/// broadcasted by an aircraft, such as coordinates, ground track, altitude,
+/// and its unique OGN identifier.
 #[derive(Debug, PartialEq, Clone)]
 pub struct AircraftBeacon {
+    /// The sender's callsign
     pub callsign: String,
+    /// The APRS q-construct indicating how the message was routed.
     pub q_construct: String,
+    /// The name/callsign of receiving station that picked up the beacon
     pub receiver: String,
-    pub ogn_aprs_protocol: OgnAprsProtocol,
+    /// The specific [OGN protocol](crate::aprs_types::OGNAPRSProtocol) used
+    pub ogn_aprs_protocol: OGNAPRSProtocol,
+    /// The time the beacon was generated (UTC)
     pub time: chrono::NaiveTime,
+    /// The latitude of the aircraft in decimal degrees (negative for South).
     pub latitude: f64,
+    /// The longitude of the aircraft in decimal degrees (negative for West).
     pub longitude: f64,
+    /// The ground track (heading) of the aircraft in degrees (0-360).
     pub ground_track: f64,
+    /// The ground speed of the aircraft (meters per second).
     pub ground_speed: f64,
+    /// The GPS altitude of the aircraft (metres)
     pub gps_altitude: f64,
+    /// The unique [OGN beacon identifier](crate::aprs_types::OGNBeaconID) extracted from the message extension.
     pub ogn_beacon_id: OGNBeaconID,
 }
 
+/// Parses a raw OGN APRS aircraft beacon message into an [AircraftBeacon].
+///
+/// This is the primary entry point for decoding an OGN beacon string. It
+/// sequentially applies `nom` parsers to extract the header information,
+/// positional block, and trailing extension tags.
+///
+/// # Arguments
+///
+/// * `input` - A byte slice containing the raw APRS message.
+///
+/// # Errors
+///
+/// Returns an [`AircraftParseError`] if:
+/// * The overall message format is invalid.
+/// * Any specific token (time, coordinates, etc.) fails to parse.
+/// * The required `id` token (OGN Beacon ID) is missing from the message.
 pub fn parse_ogn_aprs_aircraft_beacon(input: &[u8]) -> Result<AircraftBeacon, AircraftParseError> {
     use nom::Finish;
 
@@ -83,7 +121,7 @@ pub fn parse_ogn_aprs_aircraft_beacon(input: &[u8]) -> Result<AircraftBeacon, Ai
             parsed_ogn_beacon_id = Some(ogn_beacon_id);
         }
     }
-    let ogn_beacon_id = parsed_ogn_beacon_id.ok_or(AircraftParseError::MissingOgnBeaconID)?;
+    let ogn_beacon_id = parsed_ogn_beacon_id.ok_or(AircraftParseError::MissingOGNBeaconID)?;
 
     Ok(AircraftBeacon {
         callsign: callsign.to_string(),
@@ -246,9 +284,9 @@ fn parse_coordinate(
 
 fn parse_aprs_signal_type(
     input: &[u8],
-) -> nom::IResult<&[u8], OgnAprsProtocol, APRSMessageParseError> {
-    let parse_to_aprs_signal_type = |s: &[u8]| -> Result<OgnAprsProtocol, APRSMessageParseError> {
-        OgnAprsProtocol::parse_protocol(std::str::from_utf8(s).unwrap_or(""))
+) -> nom::IResult<&[u8], OGNAPRSProtocol, APRSMessageParseError> {
+    let parse_to_aprs_signal_type = |s: &[u8]| -> Result<OGNAPRSProtocol, APRSMessageParseError> {
+        OGNAPRSProtocol::parse_protocol(std::str::from_utf8(s).unwrap_or(""))
     };
     nom::combinator::map_res(
         nom::sequence::terminated(take_until(b",".as_slice()), tag(b",".as_slice())),
@@ -331,7 +369,7 @@ fn parse_ogn_beacon_id(input: &[u8]) -> nom::IResult<&[u8], OGNBeaconID, APRSMes
 mod tests {
     use std::str::FromStr;
 
-    use crate::aprs_types::{OGNBeaconID, OgnAprsProtocol};
+    use crate::aprs_types::{OGNAPRSProtocol, OGNBeaconID};
     use crate::parse::{APRSMessageParseError, AircraftBeacon};
     use crate::parse::{
         Coordinate, parse_aprs_signal_type, parse_callsign, parse_coordinate, parse_gps_altitude,
@@ -686,7 +724,7 @@ mod tests {
             let aircraft = AircraftBeacon {
                 callsign: self.expected_callsign.to_string(),
                 q_construct: self.q_construct.to_string(),
-                ogn_aprs_protocol: OgnAprsProtocol::from_str(self.ogn_aprs_protocol).unwrap(),
+                ogn_aprs_protocol: OGNAPRSProtocol::from_str(self.ogn_aprs_protocol).unwrap(),
                 receiver: self.receiver.to_string(),
                 time: chrono::NaiveTime::from_hms_opt(h, m, s).unwrap(),
                 latitude: lat,

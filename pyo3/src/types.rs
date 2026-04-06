@@ -258,7 +258,7 @@ mod enums {
     }
 
     mirror_enum!(
-        ogn_aprs_parser::OgnAprsProtocol,
+        ogn_aprs_parser::OGNAPRSProtocol,
         PyOgnAprsProtocol,
         OgnAprsProtocol,
         [OGADSB, OGFLR, OGNSKY]
