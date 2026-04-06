@@ -1,6 +1,6 @@
 use pyo3::{exceptions::PyValueError, prelude::*};
 
-pub use self::enums::{PyOGNAddressType, PyOGNAircraftType, PyOgnAprsProtocol};
+pub use self::enums::{PyOGNAddressType, PyOGNAircraftType, PyOGNAPRSProtocol};
 
 #[cfg(feature = "stubgen")]
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -16,7 +16,7 @@ pub struct PyAircraftBeacon {
     #[pyo3(get, set)]
     pub receiver: String,
     #[pyo3(get, set)]
-    pub ogn_aprs_protocol: PyOgnAprsProtocol,
+    pub ogn_aprs_protocol: PyOGNAPRSProtocol,
     #[pyo3(get, set)]
     pub time: chrono::NaiveTime,
     #[pyo3(get, set)]
@@ -41,7 +41,7 @@ impl PyAircraftBeacon {
         callsign: String,
         q_construct: String,
         receiver: String,
-        ogn_aprs_protocol: PyOgnAprsProtocol,
+        ogn_aprs_protocol: PyOGNAPRSProtocol,
         time: chrono::NaiveTime,
         latitude: f64,
         longitude: f64,
@@ -71,7 +71,7 @@ impl PyAircraftBeacon {
         callsign: String,
         q_construct: String,
         receiver: String,
-        ogn_aprs_protocol: PyOgnAprsProtocol,
+        ogn_aprs_protocol: PyOGNAPRSProtocol,
         time: chrono::NaiveTime,
         latitude: f64,
         longitude: f64,
@@ -259,8 +259,8 @@ mod enums {
 
     mirror_enum!(
         ogn_aprs_parser::OGNAPRSProtocol,
-        PyOgnAprsProtocol,
-        OgnAprsProtocol,
+        PyOGNAPRSProtocol,
+        OGNAPRSProtocol,
         [OGADSB, OGFLR, OGNSKY]
     );
 
