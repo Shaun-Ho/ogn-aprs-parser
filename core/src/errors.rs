@@ -1,3 +1,5 @@
+//! Error types and contexts for OGN APRS parsing operations.
+
 use crate::aprs_types::ICAOAddress;
 
 #[derive(Debug, thiserror::Error)]
