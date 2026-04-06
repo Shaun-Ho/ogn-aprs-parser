@@ -1,4 +1,5 @@
-pub mod modules;
+mod modules;
+mod parse;
 mod types;
 
 #[cfg(feature = "stubgen")]
