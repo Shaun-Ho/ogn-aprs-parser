@@ -1,3 +1,9 @@
+//! This module provides functionality to parse OGN (Open Glider Network) APRS
+//! (Automatic Packet Reporting System) messages. It uses the `nom` crate for
+//! parser combinators to extract aircraft telemetry and identification data.
+//!
+//! Documentation about the message position report can be found on the [OGN website](http://wiki.glidernet.org/aprs-interaction-examples)
+
 use super::errors::{APRSMessageParseError, APRSParseContext};
 use crate::{
     aprs_types::{OGNBeaconID, OgnAprsProtocol},
@@ -9,21 +15,53 @@ use nom::{
     bytes::complete::{tag, take, take_until},
 };
 
+/// Represents a parsed OGN (Open Glider Network) APRS aircraft beacon.
+///
+/// This struct contains all the extracted telemetric and identification data
+/// broadcasted by an aircraft, such as coordinates, ground track, altitude,
+/// and its unique OGN identifier.
 #[derive(Debug, PartialEq, Clone)]
 pub struct AircraftBeacon {
+    /// The sender's callsign
     pub callsign: String,
+    /// The APRS q-construct indicating how the message was routed.
     pub q_construct: String,
+    /// The name/callsign of receiving station that picked up the beacon
     pub receiver: String,
+    /// The specific [OGN protocol](crate::aprs_types::OgnAprsProtocol) used
     pub ogn_aprs_protocol: OgnAprsProtocol,
+    /// The time the beacon was generated (UTC)
     pub time: chrono::NaiveTime,
+    /// The latitude of the aircraft in decimal degrees (negative for South).
     pub latitude: f64,
+    /// The longitude of the aircraft in decimal degrees (negative for West).
     pub longitude: f64,
+    /// The ground track (heading) of the aircraft in degrees (0-360).
     pub ground_track: f64,
+    /// The ground speed of the aircraft (meters per second).
     pub ground_speed: f64,
+    /// The GPS altitude of the aircraft (metres)
     pub gps_altitude: f64,
+    /// The unique [OGN beacon identifier](crate::aprs_types::OGNBeaconID) extracted from the message extension.
     pub ogn_beacon_id: OGNBeaconID,
 }
 
+/// Parses a raw OGN APRS aircraft beacon message into an [AircraftBeacon].
+///
+/// This is the primary entry point for decoding an OGN beacon string. It
+/// sequentially applies `nom` parsers to extract the header information,
+/// positional block, and trailing extension tags.
+///
+/// # Arguments
+///
+/// * `input` - A byte slice containing the raw APRS message.
+///
+/// # Errors
+///
+/// Returns an [`AircraftParseError`] if:
+/// * The overall message format is invalid.
+/// * Any specific token (time, coordinates, etc.) fails to parse.
+/// * The required `id` token (OGN Beacon ID) is missing from the message.
 pub fn parse_ogn_aprs_aircraft_beacon(input: &[u8]) -> Result<AircraftBeacon, AircraftParseError> {
     use nom::Finish;
 
