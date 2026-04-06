@@ -14,7 +14,7 @@ mod ogn_aprs_parser_pyo3 {
     #[pymodule_init]
     fn init(m: &Bound<'_, PyModule>) -> PyResult<()> {
         m.add_function(wrap_pyfunction!(parse_ogn_aprs_aircraft_beacon_py, m)?)?;
-        
+
         m.add_class::<PyAircraftBeacon>()?;
         m.add_class::<PyICAOAddress>()?;
         m.add_class::<PyOGNAddressType>()?;

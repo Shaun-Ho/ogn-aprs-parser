@@ -9,67 +9,140 @@ import typing
 __all__ = [
     "AircraftBeacon",
     "ICAOAddress",
+    "OGNAPRSProtocol",
     "OGNAddressType",
     "OGNAircraftType",
     "OGNBeaconID",
     "OGNIDPrefix",
-    "OgnAprsProtocol",
     "parse_ogn_aprs_aircraft_beacon",
 ]
 
 @typing.final
 class AircraftBeacon:
+    r"""
+    Represents a parsed OGN (Open Glider Network) APRS aircraft beacon.
+
+    This class contains all the extracted telemetric and identification data
+    broadcasted by an aircraft, such as coordinates, ground track, altitude,
+    and its unique OGN identifier.
+    """
     @property
-    def callsign(self) -> builtins.str: ...
+    def callsign(self) -> builtins.str:
+        r"""
+        The sender's callsign
+        """
     @callsign.setter
-    def callsign(self, value: builtins.str) -> None: ...
+    def callsign(self, value: builtins.str) -> None:
+        r"""
+        The sender's callsign
+        """
     @property
-    def q_construct(self) -> builtins.str: ...
+    def q_construct(self) -> builtins.str:
+        r"""
+        The APRS q-construct indicating how the message was routed.
+        """
     @q_construct.setter
-    def q_construct(self, value: builtins.str) -> None: ...
+    def q_construct(self, value: builtins.str) -> None:
+        r"""
+        The APRS q-construct indicating how the message was routed.
+        """
     @property
-    def receiver(self) -> builtins.str: ...
+    def receiver(self) -> builtins.str:
+        r"""
+        The name/callsign of receiving station that picked up the beacon
+        """
     @receiver.setter
-    def receiver(self, value: builtins.str) -> None: ...
+    def receiver(self, value: builtins.str) -> None:
+        r"""
+        The name/callsign of receiving station that picked up the beacon
+        """
     @property
-    def ogn_aprs_protocol(self) -> OgnAprsProtocol: ...
+    def ogn_aprs_protocol(self) -> OGNAPRSProtocol:
+        r"""
+        The specific `OGNAPRSProtocol` used
+        """
     @ogn_aprs_protocol.setter
-    def ogn_aprs_protocol(self, value: OgnAprsProtocol) -> None: ...
+    def ogn_aprs_protocol(self, value: OGNAPRSProtocol) -> None:
+        r"""
+        The specific `OGNAPRSProtocol` used
+        """
     @property
-    def time(self) -> datetime.time: ...
+    def time(self) -> datetime.time:
+        r"""
+        The time the beacon was generated (UTC)
+        """
     @time.setter
-    def time(self, value: datetime.time) -> None: ...
+    def time(self, value: datetime.time) -> None:
+        r"""
+        The time the beacon was generated (UTC)
+        """
     @property
-    def latitude(self) -> builtins.float: ...
+    def latitude(self) -> builtins.float:
+        r"""
+        The latitude of the aircraft in decimal degrees (negative for South).
+        """
     @latitude.setter
-    def latitude(self, value: builtins.float) -> None: ...
+    def latitude(self, value: builtins.float) -> None:
+        r"""
+        The latitude of the aircraft in decimal degrees (negative for South).
+        """
     @property
-    def longitude(self) -> builtins.float: ...
+    def longitude(self) -> builtins.float:
+        r"""
+        The longitude of the aircraft in decimal degrees (negative for West).
+        """
     @longitude.setter
-    def longitude(self, value: builtins.float) -> None: ...
+    def longitude(self, value: builtins.float) -> None:
+        r"""
+        The longitude of the aircraft in decimal degrees (negative for West).
+        """
     @property
-    def ground_track(self) -> builtins.float: ...
+    def ground_track(self) -> builtins.float:
+        r"""
+        The ground track (heading) of the aircraft in degrees (0-360).
+        """
     @ground_track.setter
-    def ground_track(self, value: builtins.float) -> None: ...
+    def ground_track(self, value: builtins.float) -> None:
+        r"""
+        The ground track (heading) of the aircraft in degrees (0-360).
+        """
     @property
-    def ground_speed(self) -> builtins.float: ...
+    def ground_speed(self) -> builtins.float:
+        r"""
+        The ground speed of the aircraft (meters per second).
+        """
     @ground_speed.setter
-    def ground_speed(self, value: builtins.float) -> None: ...
+    def ground_speed(self, value: builtins.float) -> None:
+        r"""
+        The ground speed of the aircraft (meters per second).
+        """
     @property
-    def gps_altitude(self) -> builtins.float: ...
+    def gps_altitude(self) -> builtins.float:
+        r"""
+        The GPS altitude of the aircraft (metres)
+        """
     @gps_altitude.setter
-    def gps_altitude(self, value: builtins.float) -> None: ...
+    def gps_altitude(self, value: builtins.float) -> None:
+        r"""
+        The GPS altitude of the aircraft (metres)
+        """
     @property
-    def ogn_beacon_id(self) -> OGNBeaconID: ...
+    def ogn_beacon_id(self) -> OGNBeaconID:
+        r"""
+        The unique `OGNBeaconID` extracted from the message extension.
+        """
     @ogn_beacon_id.setter
-    def ogn_beacon_id(self, value: OGNBeaconID) -> None: ...
+    def ogn_beacon_id(self, value: OGNBeaconID) -> None:
+        r"""
+        The unique `OGNBeaconID` extracted from the message extension.
+        """
     def __eq__(self, other: builtins.object) -> builtins.bool: ...
     def __new__(
         cls,
         callsign: builtins.str,
         q_construct: builtins.str,
         receiver: builtins.str,
-        ogn_aprs_protocol: OgnAprsProtocol,
+        ogn_aprs_protocol: OGNAPRSProtocol,
         time: datetime.time,
         latitude: builtins.float,
         longitude: builtins.float,
@@ -83,7 +156,7 @@ class AircraftBeacon:
         callsign: builtins.str,
         q_construct: builtins.str,
         receiver: builtins.str,
-        ogn_aprs_protocol: OgnAprsProtocol,
+        ogn_aprs_protocol: OGNAPRSProtocol,
         time: datetime.time,
         latitude: builtins.float,
         longitude: builtins.float,
@@ -96,12 +169,30 @@ class AircraftBeacon:
 
 @typing.final
 class ICAOAddress:
+    r"""
+    Represents a 24-bit ICAO aircraft address.
+    """
     def __eq__(self, other: builtins.object) -> builtins.bool: ...
     def __new__(cls, value: builtins.int) -> ICAOAddress: ...
+    def __init__(self, value: builtins.int) -> None:
+        r"""
+        Initializes a new ICAO Address from an integer.
+
+        # Raises
+
+        * `ValueError`: If the provided integer falls outside the valid
+          24-bit bounds for an ICAO address.
+        """
     def __repr__(self) -> builtins.str: ...
 
 @typing.final
 class OGNBeaconID:
+    r"""
+    Represents a complete OGN beacon identifier.
+
+    In OGN APRS, a beacon ID is composed of a 1-byte metadata prefix (encoding
+    things like aircraft type and tracker type) and a 3-byte (24-bit) address.
+    """
     @property
     def prefix(self) -> OGNIDPrefix: ...
     @prefix.setter
@@ -112,10 +203,26 @@ class OGNBeaconID:
     def icao_address(self, value: ICAOAddress) -> None: ...
     def __eq__(self, other: builtins.object) -> builtins.bool: ...
     def __new__(cls, prefix: OGNIDPrefix, icao_address: ICAOAddress) -> OGNBeaconID: ...
+    def __init__(self, prefix: OGNIDPrefix, icao_address: ICAOAddress) -> None:
+        r"""
+        Constructs a new `OGNBeaconID` from a given prefix and address.
+        """
     def __repr__(self) -> builtins.str: ...
 
 @typing.final
 class OGNIDPrefix:
+    r"""
+    The decoded metadata parsed from the 1-byte OGN ID prefix.
+
+    The OGN network embeds privacy requests and object type classification into
+    the first byte of a tracker's ID string using specific bitwise flags.
+
+    # Bit Layout
+    * **Bits 0-1:** Device Address Type (2 bits) -> `OGNAddressType`
+    * **Bits 2-5:** Aircraft / Object Type (4 bits) -> `OGNAircraftType`
+    * **Bit 6:** No-Track Flag (1 bit). If true, do not record trace logs.
+    * **Bit 7:** Stealth Mode Flag (1 bit). If true, delay or hide on live maps.
+    """
     @property
     def aircraft_type(self) -> OGNAircraftType: ...
     @aircraft_type.setter
@@ -140,9 +247,30 @@ class OGNIDPrefix:
         no_track: builtins.bool,
         stealth_mode: builtins.bool,
     ) -> OGNIDPrefix: ...
+    def __init__(
+        self,
+        aircraft_type: OGNAircraftType,
+        address_type: OGNAddressType,
+        no_track: builtins.bool,
+        stealth_mode: builtins.bool,
+    ) -> None: ...
+
+@typing.final
+class OGNAPRSProtocol(enum.Enum):
+    r"""
+    The protocol format used by the beacon over the APRS network.
+    """
+
+    OGADSB = ...
+    OGFLR = ...
+    OGNSKY = ...
 
 @typing.final
 class OGNAddressType(enum.Enum):
+    r"""
+    The scheme utilized to format and route the beacon address.
+    """
+
     UNKNOWN = ...
     ICAO = ...
     FLARM = ...
@@ -150,6 +278,10 @@ class OGNAddressType(enum.Enum):
 
 @typing.final
 class OGNAircraftType(enum.Enum):
+    r"""
+    Categories of aircraft identified in the OGN network.
+    """
+
     RESERVED = ...
     GLIDER = ...
     TOW_PLANE = ...
@@ -166,10 +298,26 @@ class OGNAircraftType(enum.Enum):
     UA_VS = ...
     STATIC_OBSTACLE = ...
 
-@typing.final
-class OgnAprsProtocol(enum.Enum):
-    OGADSB = ...
-    OGFLR = ...
-    OGNSKY = ...
+def parse_ogn_aprs_aircraft_beacon(input: builtins.bytes) -> AircraftBeacon:
+    r"""
+    Parses a raw OGN APRS aircraft beacon message.
 
-def parse_ogn_aprs_aircraft_beacon(input: builtins.bytes) -> AircraftBeacon: ...
+    This is the primary entry point for decoding an OGN beacon. It extracts
+    the header information, positional block, and trailing extension tags from
+    the raw byte stream.
+
+    # Arguments
+
+    * `input` (`bytes`): A bytes-like object containing the raw APRS message.
+
+    # Returns
+
+    `AircraftBeacon`: The successfully parsed beacon object.
+
+    # Raises
+
+    * `ValueError`: If the parsing fails. This typically occurs if:
+      * The overall message format is invalid.
+      * A specific token (time, coordinates, etc.) fails to parse.
+      * The required OGN Beacon ID is missing from the message.
+    """
