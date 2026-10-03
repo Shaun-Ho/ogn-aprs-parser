@@ -5,7 +5,7 @@ ogn-aprs-parser-pyo3 = { workspace = true }
 members = ["pyo3"]
 
 [dependency-groups]
-test = ["pytest>=9.0.2"]
+test = ["maturin>=1.0,<2.0", "pytest>=9.0.2"]
 lint = ["ruff>=0.15.8"]
 type-check = ["pyrefly>=0.59.1"]
 dev = [
