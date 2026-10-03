@@ -99,7 +99,9 @@ project-includes = ["pyo3/**/*.py*"]
 project-excludes = ["**/node_modules", "**/__pycache__", "**/venv/**/*"]
 
 [tool.poe.tasks]
-test = "pytest"
+build-bindings = "maturin develop -m pyo3/Cargo.toml"
+pytest = "pytest"
+test = ["build-bindings", "pytest"]
 ruff-check = "ruff check"
 ruff-format = "ruff format"
 lint = ["ruff-check", "ruff-format"]
