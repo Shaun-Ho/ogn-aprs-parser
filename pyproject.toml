@@ -104,3 +104,6 @@ ruff-check = "ruff check"
 ruff-format = "ruff format"
 lint = ["ruff-check", "ruff-format"]
 type-check = "pyrefly check"
+stub-generate = "cargo run -p ogn-aprs-parser-pyo3 --bin generate_stub --features stubgen"
+stub-format = "ruff format pyo3/ogn_aprs_parser/ogn_aprs_parser_pyo3/__init__.pyi"
+stubgen = ["stub-generate", "stub-format", "type-check"]
