@@ -5,7 +5,7 @@ ogn-aprs-parser-pyo3 = { workspace = true }
 members = ["pyo3"]
 
 [dependency-groups]
-test = ["pytest>=9.0.2"]
+test = ["maturin>=1.0,<2.0", "pytest>=9.0.2"]
 lint = ["ruff>=0.15.8"]
 type-check = ["pyrefly>=0.59.1"]
 dev = [
@@ -99,8 +99,13 @@ project-includes = ["pyo3/**/*.py*"]
 project-excludes = ["**/node_modules", "**/__pycache__", "**/venv/**/*"]
 
 [tool.poe.tasks]
-test = "pytest"
+build-bindings = "maturin develop -m pyo3/Cargo.toml"
+pytest = "pytest"
+test = ["build-bindings", "pytest"]
 ruff-check = "ruff check"
 ruff-format = "ruff format"
 lint = ["ruff-check", "ruff-format"]
 type-check = "pyrefly check"
+stub-generate = "cargo run -p ogn-aprs-parser-pyo3 --bin generate_stub --features stubgen"
+stub-format = "ruff format pyo3/ogn_aprs_parser/ogn_aprs_parser_pyo3/__init__.pyi"
+stubgen = ["stub-generate", "stub-format", "type-check"]

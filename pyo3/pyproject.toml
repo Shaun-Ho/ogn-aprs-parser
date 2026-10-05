@@ -24,6 +24,8 @@ module-name = "ogn_aprs_parser.ogn_aprs_parser_pyo3"
 [tool.uv]
 cache-keys = [
   { file = "Cargo.toml" },
+  { file = "../Cargo.toml" },
+  { file = "../Cargo.lock" },
   { file = "../core/Cargo.toml" },
   { file = "src/**/*.rs" },
   { file = "../core/src/**/*.rs" },
